@@ -7,6 +7,8 @@ import SignupScreen from "./src/screens/SignupScreen";
 import WelcomeScreen from "./src/screens/WelcomeScreen";
 import { Colors } from "./src/constants/styles";
 import { store } from "./src/store/store";
+import { useAppSelector } from "./src/hooks/use-redux";
+import { useLayoutEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,9 +42,14 @@ function AuthenticatedStack() {
 }
 
 function Navigation() {
+  const isAuthenticated = useAppSelector(
+    (state) => state.authState.isAuthenticated
+  );
+
   return (
     <NavigationContainer>
-      <AuthStack />
+      {!isAuthenticated && <AuthStack />}
+      {isAuthenticated && <AuthenticatedStack />}
     </NavigationContainer>
   );
 }
