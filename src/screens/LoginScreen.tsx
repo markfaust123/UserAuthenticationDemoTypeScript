@@ -1,11 +1,11 @@
 import { useState } from "react";
 import AuthContent from "../components/Auth/AuthContent";
-import { login } from "../src/util/auth";
+import { login } from "../util/auth";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
+import { Alert } from "react-native";
 
 function LoginScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
 
   const handleSignIn = async ({
     email,
@@ -14,11 +14,14 @@ function LoginScreen() {
     email: string;
     password: string;
   }) => {
+    setIsAuthenticating(true);
     try {
-      setIsAuthenticating(true);
       await login(email, password);
     } catch (error) {
-      setError("Error logging in user");
+      Alert.alert(
+        "Authentication failed!",
+        "Could not log you in. Please check your credentials, or try again later!"
+      );
     }
     setIsAuthenticating(false);
   };

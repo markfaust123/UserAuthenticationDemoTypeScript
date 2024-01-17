@@ -1,11 +1,11 @@
 import { useState } from "react";
 import AuthContent from "../components/Auth/AuthContent";
-import { createUser } from "../src/util/auth";
+import { createUser } from "../util/auth";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
+import { Alert } from "react-native";
 
 function SignupScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
 
   const handleSignUp = async ({
     email,
@@ -14,11 +14,14 @@ function SignupScreen() {
     email: string;
     password: string;
   }) => {
+    setIsAuthenticating(true);
     try {
-      setIsAuthenticating(true);
       await createUser(email, password);
     } catch (error) {
-      setError("Error creating user");
+      Alert.alert(
+        "Authentication failed!",
+        "Could not create user, please check your input, and try again later."
+      );
     }
     setIsAuthenticating(false);
   };

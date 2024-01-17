@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 
 import Button from "../ui/Button";
 import Input from "./Input";
-import type { Credentials } from "../../src/lib/types";
+import type { Credentials } from "../../lib/types";
 
 type InvalidCredentials = {
   email: boolean;
@@ -60,7 +60,7 @@ function AuthForm({
   }
 
   return (
-    <View style={styles.form}>
+    <View>
       <View>
         <Input
           label="Email Address"
