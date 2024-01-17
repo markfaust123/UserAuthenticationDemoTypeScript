@@ -5,6 +5,7 @@ import FlatButton from "../ui/FlatButton";
 import AuthForm from "./AuthForm";
 import { Colors } from "../../constants/styles";
 import type { Credentials } from "../../src/lib/types";
+import { useNavigation } from "@react-navigation/native";
 
 type Authentication = { email: string; password: string };
 
@@ -22,8 +23,14 @@ function AuthContent({
     confirmPassword: false,
   });
 
+  const navigation = useNavigation<any>();
+
   function switchAuthModeHandler() {
-    // Todo
+    if(isLogin) {
+      navigation.replace("Signup");
+    } else {
+      navigation.replace("Login");
+    }
   }
 
   function submitHandler(credentials: Credentials) {
