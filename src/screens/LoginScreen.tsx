@@ -3,9 +3,13 @@ import AuthContent from "../components/Auth/AuthContent";
 import { login } from "../util/auth";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import { Alert } from "react-native";
+import { useAppDispatch } from "../hooks/use-redux";
+import { authenticate } from "../store/auth-redux";
 
 function LoginScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
 
   const handleSignIn = async ({
     email,
@@ -16,7 +20,8 @@ function LoginScreen() {
   }) => {
     setIsAuthenticating(true);
     try {
-      await login(email, password);
+      const token = await login(email, password);
+      dispatch(authenticate({ token: token }));
     } catch (error) {
       Alert.alert(
         "Authentication failed!",

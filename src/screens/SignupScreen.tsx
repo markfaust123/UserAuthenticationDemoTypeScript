@@ -3,9 +3,13 @@ import AuthContent from "../components/Auth/AuthContent";
 import { createUser } from "../util/auth";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import { Alert } from "react-native";
+import { useAppDispatch } from "../hooks/use-redux";
+import { authenticate } from "../store/auth-redux";
 
 function SignupScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
 
   const handleSignUp = async ({
     email,
@@ -16,7 +20,8 @@ function SignupScreen() {
   }) => {
     setIsAuthenticating(true);
     try {
-      await createUser(email, password);
+      const token = await createUser(email, password);
+      dispatch(authenticate({ token: token }));
     } catch (error) {
       Alert.alert(
         "Authentication failed!",
