@@ -8,9 +8,10 @@ import WelcomeScreen from "./src/screens/WelcomeScreen";
 import { Colors } from "./src/constants/styles";
 import { store } from "./src/store/store";
 import { useAppDispatch, useAppSelector } from "./src/hooks/use-redux";
-import { useLayoutEffect } from "react";
 import IconButton from "./src/components/ui/IconButton";
-import { logout } from "./src/store/auth-redux";
+import { authenticate, logout } from "./src/store/auth-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 
@@ -61,6 +62,18 @@ function AuthenticatedStack() {
 }
 
 function Navigation() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const storedToken = await AsyncStorage.getItem("token");
+      if (storedToken) {
+        dispatch(authenticate({ token: storedToken }));
+      }
+    };
+    fetchToken();
+  }, []);
+
   const isAuthenticated = useAppSelector(
     (state) => state.authState.isAuthenticated
   );
