@@ -8,7 +8,7 @@ function IconButton({
   onPress,
 }: {
   icon: any,
-  color: string,
+  color?: string,
   size: number,
   onPress: () => void;
 }) {

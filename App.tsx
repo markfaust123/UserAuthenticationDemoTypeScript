@@ -7,8 +7,10 @@ import SignupScreen from "./src/screens/SignupScreen";
 import WelcomeScreen from "./src/screens/WelcomeScreen";
 import { Colors } from "./src/constants/styles";
 import { store } from "./src/store/store";
-import { useAppSelector } from "./src/hooks/use-redux";
+import { useAppDispatch, useAppSelector } from "./src/hooks/use-redux";
 import { useLayoutEffect } from "react";
+import IconButton from "./src/components/ui/IconButton";
+import { logout } from "./src/store/auth-redux";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +30,8 @@ function AuthStack() {
 }
 
 function AuthenticatedStack() {
+  const dispatch = useAppDispatch();
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -36,7 +40,22 @@ function AuthenticatedStack() {
         contentStyle: { backgroundColor: Colors.primary100 },
       }}
     >
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      <Stack.Screen
+        name="Welcome"
+        component={WelcomeScreen}
+        options={{
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="exit"
+              color={tintColor}
+              size={24}
+              onPress={() => {
+                dispatch(logout());
+              }}
+            />
+          ),
+        }}
+      />
     </Stack.Navigator>
   );
 }
