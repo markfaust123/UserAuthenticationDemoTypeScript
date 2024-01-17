@@ -11,7 +11,10 @@ import { useAppDispatch, useAppSelector } from "./src/hooks/use-redux";
 import IconButton from "./src/components/ui/IconButton";
 import { authenticate, logout } from "./src/store/auth-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
 
@@ -62,18 +65,6 @@ function AuthenticatedStack() {
 }
 
 function Navigation() {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const fetchToken = async () => {
-      const storedToken = await AsyncStorage.getItem("token");
-      if (storedToken) {
-        dispatch(authenticate({ token: storedToken }));
-      }
-    };
-    fetchToken();
-  }, []);
-
   const isAuthenticated = useAppSelector(
     (state) => state.authState.isAuthenticated
   );
@@ -86,12 +77,34 @@ function Navigation() {
   );
 }
 
+const Root = () => {
+  const [isTryingLogin, setIsTryingLogin] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const storedToken = await AsyncStorage.getItem("token");
+      if (storedToken) {
+        dispatch(authenticate({ token: storedToken }));
+      }
+      setIsTryingLogin(false);
+    };
+    fetchToken();
+  }, []);  
+
+  if (!isTryingLogin) {
+    SplashScreen.hideAsync();
+  }
+
+  return <Navigation />;
+};
+
 export default function App() {
   return (
     <>
       <StatusBar style="light" />
       <Provider store={store}>
-        <Navigation />
+        <Root />
       </Provider>
     </>
   );
